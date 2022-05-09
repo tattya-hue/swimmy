@@ -12,5 +12,6 @@ module Swimmy
     autoload :Recurrence,  "#{dir}/schedule.rb"
     autoload :Occurence,   "#{dir}/schedule.rb"
     autoload :CoronaInfo,  "#{dir}/coronaresource.rb"
+    autoload :Restaurant,  "#{dir}/restaurant.rb"
   end
 end

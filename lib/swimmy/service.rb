@@ -7,5 +7,6 @@ module Swimmy
     autoload :Weather,     "#{dir}/weather.rb"
     autoload :Anniversary, "#{dir}/anniversary.rb"
     autoload :Coronainfo,  "#{dir}/coronainfo.rb"
+    autoload :RestaurantInfo, "#{dir}/restaurant_info.rb"
   end
 end
