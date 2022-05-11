@@ -6,6 +6,6 @@ module Swimmy
     autoload :Geocoding,   "#{dir}/geocoding.rb"
     autoload :Weather,     "#{dir}/weather.rb"
     autoload :Anniversary, "#{dir}/anniversary.rb"
-    autoload :Coronainfo,  "#{dir}/coronaservice.rb"
+    autoload :Coronainfo,  "#{dir}/coronainfo.rb"
   end
 end
