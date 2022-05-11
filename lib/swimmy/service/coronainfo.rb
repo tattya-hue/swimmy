@@ -19,7 +19,7 @@ module Swimmy
         end
 
         # データの提供元にてリザルトコードの扱いが示されていなかったため，正しくデータを取得できているか確認する
-        #return nil unless result["itemList"][0]
+        return nil unless result["itemList"][0]
         return Swimmy::Resource::CoronaInfo.new(
                  prefname,
                  date,
