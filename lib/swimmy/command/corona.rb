@@ -8,6 +8,7 @@ module Swimmy
 
       command "corona" do |client, data, match|
         yesterday, pref = Date.today - 1, "岡山県"
+        pref = match[:expression] if match[:expression]
 
         info1 = Service::Coronainfo.new.fetch_info(pref, yesterday)
         info2 = Service::Coronainfo.new.fetch_info(pref, yesterday -1)
