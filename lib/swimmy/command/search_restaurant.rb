@@ -1,16 +1,15 @@
 # coding: utf-8
-require "net/http"
-require "json"
-require "rexml/document"
 
 module Swimmy
   module Command
     class Search_restaurant < Swimmy::Command::Base
+      HOTPEPPER_CREDIT = "Powered by <http://webservice.recruit.co.jp/|ホットペッパー Webサービス>"
 
       command "search_restaurant" do |client,data,match|
         rio = Swimmy::Service::RestaurantInfo.new
         restaurant = rio.random_fetch_info(match[:expression])
-        client.say(channel: data.channel,text: restaurant.to_s)
+        chat_text = restaurant.to_s + HOTPEPPER_CREDIT
+        client.say(channel: data.channel,text: chat_text)
       end #do |client,data,match|
 
       help do
