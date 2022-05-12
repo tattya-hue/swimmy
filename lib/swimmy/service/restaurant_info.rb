@@ -8,7 +8,7 @@ module Swimmy
     class RestaurantInfo
 
       def fetch_info(keyword)
-        keyword ||="日本"
+        keyword ||="居酒屋"
 
         encoded_URI = URI.encode "https://webservice.recruit.co.jp/hotpepper/gourmet/v1/?key=5a9f7a611fa1993e&keyword=#{keyword.encode("UTF-8")}"
 
