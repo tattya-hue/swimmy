@@ -7,17 +7,17 @@ module Swimmy
     class Corona < Swimmy::Command::Base
 
       command "corona" do |client, data, match|
-        yesterday, pref = Date.today - 1, "岡山県"
+        db_yesterday, pref = Date.today - 2, "岡山県"
         pref = match[:expression] if match[:expression]
 
-        info1 = Service::Coronainfo.new.fetch_info(pref, yesterday)
-        info2 = Service::Coronainfo.new.fetch_info(pref, yesterday -1)
+        info1 = Service::Coronainfo.new.fetch_info(pref, db_yesterday)
+        info2 = Service::Coronainfo.new.fetch_info(pref, db_yesterday -1)
 
         if info1 && info2
           diff = info1.cumulative_patients - info2.cumulative_patients
 
           message = <<~EOS
-          #{yesterday}時点での#{pref}の累計コロナ感染者数は，
+          #{db_yesterday}時点での#{pref}の累計コロナ感染者数は，
           #{info1.cumulative_patients}人です．前日から#{diff}人の増加です．
           EOS
         else
