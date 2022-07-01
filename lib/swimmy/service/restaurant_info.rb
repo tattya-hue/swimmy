@@ -26,6 +26,11 @@ module Swimmy
         restaurants
       end
 
+      def credit()
+        credit = "Powered by <http://webservice.recruit.co.jp/|ホットペッパー Webサービス>"
+        return credit
+      end
+
       def random_fetch_info(keyword)
         restaurants = fetch_info(keyword)
         restaurants.sample
