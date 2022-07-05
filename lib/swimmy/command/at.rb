@@ -8,7 +8,7 @@ module Swimmy
       command "at" do |client, data, match|
 
         channel = data.channel
-        user_name = client.web_client.users_info(user: data.user).user.real_name
+        user_name = client.web_client.users_info(user: data.user).user.profile.display_name
         args = match[:expression]
         ss_controller = SpreadSheetController.new(spreadsheet)
 

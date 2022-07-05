@@ -8,7 +8,7 @@ module Swimmy
       command "memo" do |client, data, match|
 
         now = Time.now
-        usr = client.web_client.users_info(user: data.user).user.real_name
+        usr = client.web_client.users_info(user: data.user).user.profile.display_name
         if match[:expression]
           client.say(channel: data.channel, text: "メモを記録中: #{now.strftime('%Y-%m-%d %H:%M:%S')} #{usr}...")
           begin
