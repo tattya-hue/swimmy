@@ -46,8 +46,10 @@ module Swimmy
       #######################################################
       ###private inner class
       class Attendance
+
         def initialize(spreadsheet)
-          @sheet = spreadsheet.sheet("attendance",Swimmy::Resource::Attendance)
+          @attendance_sheet = spreadsheet.sheet("attendance",Swimmy::Resource::Attendance)
+          @members_sheet = spreadsheet.sheet("members",Swimmy::Resource::Member)
         end
 
         def current_attendance
@@ -65,12 +67,13 @@ module Swimmy
           absence_list = []
           attendance_list = []
           return_list = []
-          sheet_list = @sheet.fetch
-          count = 0
+          sheet_list = @attendance_sheet.fetch
+          all_members = @members_sheet.fetch.select{|m| m.active?}.map{|m| m.account}
         
           for row in sheet_list.reverse
             unless written_list.include?(row.member_name)
               written_list.append("#{row.member_name}")
+              p all_members.delete("#{row.member_name}")
               case row.inout
               when "bye"
                 absence_list.append("#{row.member_name}\n")
@@ -80,8 +83,7 @@ module Swimmy
               end
             else
             end
-          count += 1
-          if count ==100
+          if all_members == []
             break
           end
           end
