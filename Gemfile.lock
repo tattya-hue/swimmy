@@ -133,7 +133,6 @@ DEPENDENCIES
   async-websocket (~> 0.8.0)
   dotenv
   enumdate
-  google-api-client (~> 0.8)
   rspec
   sheetq!
   slack-ruby-bot

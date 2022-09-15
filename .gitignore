@@ -35,6 +35,8 @@ attic/
 .env
 vendor/
 .bundle/
+config/*
+!credentials.json.sample
 
 ################
 ## rspec failure tracking
