@@ -56,6 +56,15 @@ swimmyとは，B4新人課題で作成した各々のSlackBotを1つにまとめ
   - [https://github.com/nomlab/sheetq](https://github.com/nomlab/sheetq)にしたがって設定を行う．
   - GoogleスプレッドシートIDを.envに設定する．
 
+- Google OAuthの設定  
+  この設定はtodayコマンド，及びphoto_uploadコマンドの使用に必須である．
+  1. [Google Cloud Console](https://console.cloud.google.com/apis/credentials)上で作成したOAuthクライアント認証情報をダウンロード(「OAuthクライアントをダウンロード」，「JSONをダウンロード」の順にクリック)し，config/credentials.jsonとして保存する．
+    または，[config/credentials.json.sample](./config/credentials.json.sample)をconfig/credentials.jsonとしてコピーし，自身のクライアント認証情報に沿って編集する．
+  2. 以下のコマンドを実行し，Google OAuth アクセストークンを作成する．
+     ```bash
+     $ ./exe/google_oauth_initializer
+     ```
+
 - systemdの設定
   - 以下のコマンドを実行する．
     ```

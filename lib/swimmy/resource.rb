@@ -13,5 +13,6 @@ module Swimmy
     autoload :Occurence,   "#{dir}/schedule.rb"
     autoload :CoronaInfo,  "#{dir}/coronaresource.rb"
     autoload :Restaurant,  "#{dir}/restaurant.rb"
+    autoload :GoogleOAuth, "#{dir}/google_oauth.rb"
   end
 end
