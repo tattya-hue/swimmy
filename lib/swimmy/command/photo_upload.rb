@@ -17,7 +17,7 @@ module Swimmy
       on 'message' do |client, data|
         google_oauth ||= begin
           Swimmy::Resource::GoogleOAuth.new(GOOGLE_CREDENTIAL_PATH, GOOGLE_TOKEN_PATH)
-        rescue e
+        rescue => e
           message = 'Google OAuthの認証に失敗しました．適切な認証情報が設定されているか確認してください．'
           client.say(channel: data.channel, text: message)
           return
