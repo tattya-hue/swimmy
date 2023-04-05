@@ -15,25 +15,25 @@ module Swimmy
       GOOGLE_TOKEN_PATH = "config/tokens.json"
 
       on 'message' do |client, data|
-        google_oauth ||= begin
-          Swimmy::Resource::GoogleOAuth.new(GOOGLE_CREDENTIAL_PATH, GOOGLE_TOKEN_PATH)
-        rescue => e
-          message = 'Google OAuthの認証に失敗しました．適切な認証情報が設定されているか確認してください．'
-          client.say(channel: data.channel, text: message)
-          return
-        end
-
         if data.files
           data.files.each do |file|
             next unless ["jpg", "png"].include?(file.filetype)
             client.say(channel: data.channel, text: "Google Photos にアップロード中 (#{file.name})...")
 
             Thread.new do
-              begin
-                blob = SlackFileDownloader.new(ENV["SLACK_API_TOKEN"]).fetch(file.url_private_download)
-                url = GooglePhotosUploader.new(google_oauth).upload(blob, file.name, data.text)
-                client.say(channel: data.channel, text: "アップロード完了 #{url}")
-              end
+              google_oauth ||= begin
+                  Swimmy::Resource::GoogleOAuth.new(GOOGLE_CREDENTIAL_PATH, GOOGLE_TOKEN_PATH)
+                rescue => e
+                  message = 'Google OAuthの認証に失敗しました．適切な認証情報が設定されているか確認してください．'
+                  client.say(channel: data.channel, text: message)
+                  return
+                end
+              blob = SlackFileDownloader.new(ENV["SLACK_API_TOKEN"]).fetch(file.url_private_download)
+              url = GooglePhotosUploader.new(google_oauth).upload(blob, file.name, data.text)
+              client.say(channel: data.channel, text: "アップロード完了 #{url}")
+            rescue
+              message = '写真のアップロードに失敗しました．'
+              client.say(channel: data.channel, text: message)
             end
           end
         end
