@@ -25,12 +25,11 @@ end
 Encoding.default_external = "UTF-8"
 Thread.abort_on_exception = true
 
+require "dotenv"
+Dotenv.load
 require "rubygems"
 require "swimmy"
-require "dotenv"
 require "optparse"
-
-Dotenv.load
 
 ################################################################
 ### Main thread
