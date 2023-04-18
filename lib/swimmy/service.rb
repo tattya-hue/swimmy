@@ -14,5 +14,6 @@ module Swimmy
     autoload :Pollen,      "#{dir}/pollen_service.rb"
     autoload :CityCode,    "#{dir}/city_code.rb"
     autoload :Openhab, "#{dir}/openhab.rb"
+    autoload :Newsapi, "#{dir}/newsapi.rb"
   end
 end
