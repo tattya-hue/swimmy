@@ -14,5 +14,6 @@ module Swimmy
     autoload :CoronaInfo,  "#{dir}/coronaresource.rb"
     autoload :Restaurant,  "#{dir}/restaurant.rb"
     autoload :GoogleOAuth, "#{dir}/google_oauth.rb"
+    autoload :Event,       "#{dir}/event.rb"
   end
 end

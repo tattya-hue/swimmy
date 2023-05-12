@@ -8,5 +8,6 @@ module Swimmy
     autoload :Anniversary, "#{dir}/anniversary.rb"
     autoload :Coronainfo,  "#{dir}/coronainfo.rb"
     autoload :RestaurantInfo, "#{dir}/restaurant_info.rb"
+    autoload :CalendarService,    "#{dir}/calendar_service.rb"
   end
 end
