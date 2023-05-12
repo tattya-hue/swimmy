@@ -11,5 +11,7 @@ module Swimmy
     autoload :CalendarService,    "#{dir}/calendar_service.rb"
     autoload :AttendanceLogger,  "#{dir}/attendance_logger.rb"
     autoload :Doorplate,   "#{dir}/doorplate.rb"
+    autoload :Pollen,      "#{dir}/pollen_service.rb"
+    autoload :CityCode,    "#{dir}/city_code.rb"
   end
 end
