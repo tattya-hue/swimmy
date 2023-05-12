@@ -9,5 +9,7 @@ module Swimmy
     autoload :Coronainfo,  "#{dir}/coronainfo.rb"
     autoload :RestaurantInfo, "#{dir}/restaurant_info.rb"
     autoload :CalendarService,    "#{dir}/calendar_service.rb"
+    autoload :AttendanceLogger,  "#{dir}/attendance_logger.rb"
+    autoload :Doorplate,   "#{dir}/doorplate.rb"
   end
 end

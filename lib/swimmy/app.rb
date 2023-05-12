@@ -77,6 +77,12 @@ module Swimmy
         opt.delete(:spreadsheet)
       end
 
+      if opt[:mqtt_endpoint]
+        Swimmy::Command.mqtt_client =
+          initialize_mqtt_client(opt[:mqtt_endpoint])
+        opt.delete(:mqtt_endpoint)
+      end
+
       if opt[:hello]
         MESSAGE_QUEUE << opt[:hello]
         opt.delete(:hello)
@@ -106,6 +112,13 @@ module Swimmy
       return Sheetq::Service::Spreadsheet.new(client, spreadsheet_id)
     end
 
+    def initialize_mqtt_client(broker_endpoint)
+      require 'mqtt'
+
+      client = MQTT::Client.connect(broker_endpoint)
+
+      return client
+    end
 
   end # class App
 end # module Swimmy
