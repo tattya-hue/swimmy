@@ -13,5 +13,6 @@ module Swimmy
     autoload :Doorplate,   "#{dir}/doorplate.rb"
     autoload :Pollen,      "#{dir}/pollen_service.rb"
     autoload :CityCode,    "#{dir}/city_code.rb"
+    autoload :Openhab, "#{dir}/openhab.rb"
   end
 end
