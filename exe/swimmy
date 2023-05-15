@@ -78,7 +78,9 @@ option.parse(ARGV)
 loop do
   begin
     bot = Swimmy::App.new(token: ENV["SLACK_API_TOKEN"],
-                          spreadsheet: ENV["SWIMMY_SHEET_ID"], hello: opt_hello)
+                          spreadsheet: ENV["SWIMMY_SHEET_ID"],
+                          mqtt_endpoint: ENV["MQTT_ENDPOINT"],
+                          hello: opt_hello)
     bot.start!
 
   rescue Interrupt, SignalException => e

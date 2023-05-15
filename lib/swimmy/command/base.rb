@@ -22,7 +22,7 @@ require "slack-ruby-bot"
 module Swimmy
   module Command
     class << self
-      attr_accessor :spreadsheet
+      attr_accessor :spreadsheet, :mqtt_client
     end
 
     class Base < SlackRubyBot::Commands::Base
@@ -30,6 +30,11 @@ module Swimmy
       # You can use spreadsheet object in your command
       def self.spreadsheet
         Swimmy::Command.spreadsheet
+      end
+
+      # You can use mqtt_client object in your command
+      def self.mqtt_client
+        Swimmy::Command.mqtt_client
       end
 
       # Create help_message for your command.
