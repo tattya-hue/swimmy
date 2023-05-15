@@ -16,5 +16,6 @@ module Swimmy
     autoload :GoogleOAuth, "#{dir}/google_oauth.rb"
     autoload :Event,       "#{dir}/event.rb"
     autoload :Pollen,      "#{dir}/pollen_resource.rb"
+    autoload :OpenhabMetadata, "#{dir}/openhab_metadata.rb"
   end
 end
