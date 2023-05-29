@@ -78,7 +78,6 @@ module Swimmy
 
       def execute(client)
         puts "at command executing [#{@command}]..."
-        client.say(channel: @channel, text: "at コマンドによるコマンド実行です．")
         text = 'swimmy ' + @command
         SlackRubyBot::Hooks::Message.new.call(
           client,
