@@ -15,5 +15,7 @@ module Swimmy
     autoload :CityCode,    "#{dir}/city_code.rb"
     autoload :Openhab, "#{dir}/openhab.rb"
     autoload :Newsapi, "#{dir}/newsapi.rb"
+    autoload :Coop, "#{dir}/coop.rb"
+
   end
 end
