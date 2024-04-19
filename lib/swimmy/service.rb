@@ -17,5 +17,6 @@ module Swimmy
     autoload :Newsapi, "#{dir}/newsapi.rb"
     autoload :Coop, "#{dir}/coop.rb"
     autoload :Nomnichi, "#{dir}/nomnichi.rb"
+    autoload :RecipeInfomation, "#{dir}/recipe_information.rb"
   end
 end
