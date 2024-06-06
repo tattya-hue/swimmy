@@ -18,5 +18,6 @@ module Swimmy
     autoload :Pollen,      "#{dir}/pollen_resource.rb"
     autoload :OpenhabMetadata, "#{dir}/openhab_metadata.rb"
     autoload :CoopShop,         "#{dir}/coop_info.rb"
+    autoload :NomnichiArticle,  "#{dir}/nomnichi_article.rb"
   end
 end

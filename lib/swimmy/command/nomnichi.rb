@@ -51,7 +51,7 @@ module Swimmy
         end
 
         def fetch_nomnichi_articles
-          Sheetq::Service::Nomnichi.new.fetch
+          Swimmy::Service::Nomnichi.new.fetch
         end
 
         def fetch_candidates(current_member_account_names, articles)

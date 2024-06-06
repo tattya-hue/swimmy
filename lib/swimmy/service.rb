@@ -16,6 +16,6 @@ module Swimmy
     autoload :Openhab, "#{dir}/openhab.rb"
     autoload :Newsapi, "#{dir}/newsapi.rb"
     autoload :Coop, "#{dir}/coop.rb"
-
+    autoload :Nomnichi, "#{dir}/nomnichi.rb"
   end
 end
