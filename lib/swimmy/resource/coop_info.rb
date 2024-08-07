@@ -4,7 +4,7 @@ module Swimmy
     class CoopShop
       def initialize(f_name, _state, n_name, time) 
         @f_name, @n_name, @time = f_name.chomp, n_name.chomp, time
-        if @time == ""
+        if @time == "" || @time == "休業\n"
           @start_time, @end_time = nil, nil
         else
           @start_time, @end_time = time.split("〜")
@@ -40,7 +40,11 @@ module Swimmy
 
       def time
         if @start_time == nil || @end_time == nil
-          return ""
+          if @time == "休業\n"
+            return "休業"
+          else
+            return ""
+          end
         else
           return @start_time.strftime("%H:%M") + "~" + @end_time.strftime("%H:%M") # 例えば 10:00~14:00 という形式に変換
         end
