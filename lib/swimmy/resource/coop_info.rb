@@ -3,10 +3,8 @@ module Swimmy
   module Resource
     class CoopShop
       def initialize(f_name, _state, n_name, time) 
-        @f_name, @n_name, @time = f_name.chomp, n_name.chomp, time
-        if @time == "" || @time == "休業\n"
-          @start_time, @end_time = nil, nil
-        else
+        @f_name, @n_name, @time = f_name.chomp, n_name.chomp, time       
+        if @time.include?("〜")
           @start_time, @end_time = time.split("〜")
           @start_time = Time.parse(@start_time)
           parts = @end_time.split("\n") # "※"以降に注意書きがある場合があるため時刻だけを切り出す
@@ -14,7 +12,10 @@ module Swimmy
             @end_time = parts[0]
           end 
           @end_time = Time.parse(@end_time)
+        else 
+          @start_time, @end_time = nil, nil
         end
+
       end
 
       def to_s
@@ -40,7 +41,7 @@ module Swimmy
 
       def time
         if @start_time == nil || @end_time == nil
-          if @time == "休業\n"
+          if @time.include?("休業")
             return "休業"
           else
             return ""
