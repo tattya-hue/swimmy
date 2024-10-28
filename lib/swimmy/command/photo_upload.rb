@@ -19,8 +19,7 @@ module Swimmy
           data.files.each do |file|
             next unless ["jpg", "png"].include?(file.filetype)
             client.say(channel: data.channel, text: "Google Photos にアップロード中 (#{file.name})...")
-
-            Thread.new do
+            begin
               google_oauth ||= begin
                   Swimmy::Resource::GoogleOAuth.new(GOOGLE_CREDENTIAL_PATH, GOOGLE_TOKEN_PATH)
                 rescue => e
