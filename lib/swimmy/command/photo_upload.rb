@@ -19,6 +19,10 @@ module Swimmy
           data.files.each do |file|
             next unless ["jpg", "png"].include?(file.filetype)
             client.say(channel: data.channel, text: "Google Photos にアップロード中 (#{file.name})...")
+
+            # NOTE: We cannot use threads to upload multiple photos asynchronously.
+            # This is because Google Photos API returns 429 (Too Many Requests)
+            # when we upload multiple photos at same time.
             begin
               google_oauth ||= begin
                   Swimmy::Resource::GoogleOAuth.new(GOOGLE_CREDENTIAL_PATH, GOOGLE_TOKEN_PATH)
