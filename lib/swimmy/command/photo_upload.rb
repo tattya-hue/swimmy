@@ -22,7 +22,7 @@ module Swimmy
 
             # NOTE: We cannot use threads to upload multiple photos asynchronously.
             # This is because Google Photos API returns 429 (Too Many Requests)
-            # when we upload multiple photos at same time.
+            # when we upload multiple photos at the same time.
             begin
               google_oauth ||= begin
                   Swimmy::Resource::GoogleOAuth.new(GOOGLE_CREDENTIAL_PATH, GOOGLE_TOKEN_PATH)
