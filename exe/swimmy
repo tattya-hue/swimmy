@@ -40,7 +40,7 @@ require "swimmy"
 ### Main thread
 
 error_count = 0
-env_names = %w(SLACK_BOT_TOKEN SLACK_APP_TOKEN SWIMMY_SHEET_ID)
+env_names = %w(SLACK_BOT_TOKEN SLACK_APP_TOKEN SWIMMY_SHEET_ID MQTT_ENDPOINT)
 
 env_names.each do |env_name|
   unless ENV[env_name]
@@ -114,8 +114,17 @@ def initialize_spreadsheet(spreadsheet_id)
   return Sheetq::Service::Spreadsheet.new(client, spreadsheet_id)
 end
 
+def initialize_mqtt_client(broker_endpoint)
+  require 'mqtt'
+  client = MQTT::Client.connect(broker_endpoint)
+  return client
+end
+
 Swimmy::Command.spreadsheet =
   initialize_spreadsheet(ENV["SWIMMY_SHEET_ID"])
+
+Swimmy::Command.mqtt_client =
+  initialize_mqtt_client(ENV["MQTT_ENDPOINT"])
 
 bot = SlackSocketModeBot.new(token: SLACK_BOT_TOKEN, app_token: SLACK_APP_TOKEN, logger: logger) do |data|
   pp data if $SWIMMY_DEBUG
