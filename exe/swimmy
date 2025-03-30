@@ -31,11 +31,16 @@ require "rubygems"
 require "swimmy"
 require "optparse"
 
+require "ostruct"
+require "logger"
+require "slack_socket_mode_bot"
+require "swimmy"
+
 ################################################################
 ### Main thread
 
 error_count = 0
-env_names = %w(SLACK_API_TOKEN SWIMMY_SHEET_ID)
+env_names = %w(SLACK_BOT_TOKEN SLACK_APP_TOKEN SWIMMY_SHEET_ID)
 
 env_names.each do |env_name|
   unless ENV[env_name]
@@ -51,58 +56,80 @@ option = OptionParser.new
 option.on('--hello ITEM', 'say hello') { |v| opt_hello = v }
 option.parse(ARGV)
 
-# 以下のよう run を使うと client オブジェクトのの後始末をしてくれたり，
-# 再接続を試みたりしてくれて，嬉しいのだけど，内部で実装されている再接
-# 続の実装が少々問題．
+$SWIMMY_DEBUG = false
+
+# Slack's Bot User OAuth Token
+# You can create this token with: https://api.slack.com/apps/
+#   → "OAuth & Permissions" → "OAuth Tokens for Your Workspace"
 #
-#  1秒周期で走るのでうるさい．
-#  特定の exception しかキャッチしない．
-# Swimmy::App は，SlackRubyBot::Server を継承しているので，その中で
-# run にモンキーパッチを当てるのが手っ取り早い．
+SLACK_BOT_TOKEN = ENV.fetch("SLACK_BOT_TOKEN")
+
+# Slack's App-Level Token
+# You can create one with: https://api.slack.com/apps/
+# → "Basic Information" → "App-Level Tokens"
 #
-# loop do
-#   begin
-#     Swimmy::App.new(token: ENV["SLACK_API_TOKEN"],
-#                     spreadsheet: ENV["SWIMMY_SHEET_ID"]).run
-#   rescue Exception => e
-#     # Maybe network error, reconnect.
-#     STDERR.puts "Error: #{e} (#{e.class})"
-#     STDERR.puts "wait 10 secs"
-#     sleep 10
-#   end
-# end
-#
-# 今のところ，とりあえず，当初の物に戻しておく↓
-#
+SLACK_APP_TOKEN = ENV.fetch("SLACK_APP_TOKEN")
 
-loop do
-  begin
-    bot = Swimmy::App.new(token: ENV["SLACK_API_TOKEN"],
-                          spreadsheet: ENV["SWIMMY_SHEET_ID"],
-                          mqtt_endpoint: ENV["MQTT_ENDPOINT"],
-                          hello: opt_hello)
-    bot.start!
+logger = Logger.new(STDOUT, level: Logger::Severity::INFO)
 
-  rescue Interrupt, SignalException => e
-    # Interrupt: SIGINT (Control-c)
-    # SignalException: Other signals
-    #   https://docs.ruby-lang.org/ja/latest/class/SignalException.html
-    # XXX: SIGUSR1 should restart the bot?
-    STDERR.puts "Interrupted #{e.message} exiting..."
-    bot.stop!
-    exit!
-
-  rescue Exception => e
-    # Maybe network error, reconnect.
-    STDERR.puts "Error: #{e} (#{e.class})"
-    STDERR.puts "wait 20 secs"
-
-    # XXX: cause ClientNotStartedError if bot is not started.
-    bot.stop! rescue nil
-
-    sleep 20
+def to_open_struct(obj)
+  case obj
+  when Hash
+    OpenStruct.new(
+      obj.transform_values do |v|
+        to_open_struct(v)
+      end
+    )
+  when Array
+    obj.map do |v|
+      to_open_struct(v)
+    end
+  else
+    obj
   end
 end
 
-# ただし，タイミングによっては，Swimmy::App のインスタンスが二重に生成
-# されるような気がするので，要観察．
+def child_command_classes(command_classes)
+  command_classes.reject do |k|
+    k.name&.starts_with?('SlackRubyBot::Commands::')
+  end
+end
+
+def initialize_spreadsheet(spreadsheet_id)
+  require "clian"
+  require "sheetq"
+
+  dir = "~/.config/sheetq/"
+
+  config = Sheetq::Config.create_from_file(File.expand_path("config.yml", dir))
+
+  client = Sheetq::GoogleClient.new(
+    config.general.client_id,
+    config.general.client_secret,
+    File.expand_path("token_store.yml", dir),
+    config.general.default_user
+  )
+
+  client.auth
+  return Sheetq::Service::Spreadsheet.new(client, spreadsheet_id)
+end
+
+Swimmy::Command.spreadsheet =
+  initialize_spreadsheet(ENV["SWIMMY_SHEET_ID"])
+
+bot = SlackSocketModeBot.new(token: SLACK_BOT_TOKEN, app_token: SLACK_APP_TOKEN, logger: logger) do |data|
+  pp data if $SWIMMY_DEBUG
+
+  child_command_classes(SlackRubyBot::Commands::Base.command_classes).each do |command_class|
+    if data[:payload] && data[:payload][:event]
+      data = to_open_struct(data[:payload][:event])
+    end
+    puts "invoke: #{command_class.name}" if $SWIMMY_DEBUG
+    command_class.invoke(bot, data)
+  end
+
+rescue Exception
+   puts $!.full_message
+end
+
+bot.run
