@@ -15,7 +15,7 @@ module Swimmy
 
         begin
           @birthday = Date.parse(birthday)
-        rescue ArgumentError
+        rescue ArgumentError, TypeError
           @birthday = nil
         end
       end
