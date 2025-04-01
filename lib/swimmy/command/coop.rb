@@ -14,7 +14,7 @@ module Swimmy
         when "time"
           pred = ->(_){true}
         end
-        script = shops.select(&pred).map{|s| s.to_s}
+        script = shops.select(&pred).map{|s| s.to_s}.join("\n")
         client.say(channel: data.channel, text: script)
       end
       
