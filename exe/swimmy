@@ -57,6 +57,8 @@ option.on('--hello ITEM', 'say hello') { |v| opt_hello = v }
 option.parse(ARGV)
 
 $SWIMMY_DEBUG = false
+$SWIMMY_LOGLEVEL = if $SWIMMY_DEBUG then Logger::DEBUG else Logger::INFO end
+logger = Logger.new(STDOUT, level: $SWIMMY_LOGLEVEL)
 
 # Slack's Bot User OAuth Token
 # You can create this token with: https://api.slack.com/apps/
@@ -69,8 +71,6 @@ SLACK_BOT_TOKEN = ENV.fetch("SLACK_BOT_TOKEN")
 # → "Basic Information" → "App-Level Tokens"
 #
 SLACK_APP_TOKEN = ENV.fetch("SLACK_APP_TOKEN")
-
-logger = Logger.new(STDOUT, level: Logger::Severity::INFO)
 
 def to_open_struct(obj)
   case obj
@@ -126,8 +126,7 @@ Swimmy::Command.spreadsheet =
 Swimmy::Command.mqtt_client =
   initialize_mqtt_client(ENV["MQTT_ENDPOINT"])
 
-bot = SlackSocketModeBot.new(token: SLACK_BOT_TOKEN, app_token: SLACK_APP_TOKEN, logger: logger) do |data|
-  pp data if $SWIMMY_DEBUG
+bot = SlackSocketModeBot.new(token: SLACK_BOT_TOKEN, app_token: SLACK_APP_TOKEN, debug: $SWIMMY_DEBUG, logger: logger) do |data|
 
   child_command_classes(SlackRubyBot::Commands::Base.command_classes).each do |command_class|
     if data[:payload] && data[:payload][:event]
