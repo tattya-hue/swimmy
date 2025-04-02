@@ -140,7 +140,9 @@ Swimmy::Command.mqtt_client =
 ################################################################
 ### Main
 
-bot = SlackSocketModeBot.new(token: SLACK_BOT_TOKEN, app_token: SLACK_APP_TOKEN, logger: logger) do |data|
+BOT_NAME = ARGV[0] || 'swimmy'
+
+bot = SlackSocketModeBot.new(name: BOT_NAME, token: SLACK_BOT_TOKEN, app_token: SLACK_APP_TOKEN, logger: logger) do |data|
   logger.debug("data: #{data}")
 
   # retry_attempt == 0 means the event is the first time.
