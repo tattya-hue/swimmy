@@ -127,17 +127,22 @@ Swimmy::Command.mqtt_client =
   initialize_mqtt_client(ENV["MQTT_ENDPOINT"])
 
 bot = SlackSocketModeBot.new(token: SLACK_BOT_TOKEN, app_token: SLACK_APP_TOKEN, debug: $SWIMMY_DEBUG, logger: logger) do |data|
+  # retry_attempt == 0 means the event is the first time.
+  # see https://api.slack.com/apis/events-api#retries
+  unless data[:payload] && data[:payload][:event] && data[:retry_attempt] == 0
+    logger.debug("skip: #{data}")
+    return
+  end
 
+  # invoke each command class
   child_command_classes(SlackRubyBot::Commands::Base.command_classes).each do |command_class|
-    if data[:payload] && data[:payload][:event]
-      data = to_open_struct(data[:payload][:event])
-    end
-    puts "invoke: #{command_class.name}" if $SWIMMY_DEBUG
+    data = to_open_struct(data[:payload][:event])
+    logger.debug("invoke: #{command_class.name}")
     command_class.invoke(bot, data)
   end
 
-rescue Exception
-   puts $!.full_message
+  rescue Exception
+    puts $!.full_message
 end
 
 bot.run
