@@ -1,21 +1,17 @@
 # coding: utf-8
 module Swimmy
   module Command
-    class Numinfo < Swimmy::Command::Base
+    class Hizuki < Swimmy::Command::Base
 
-      command "numi" do |client, data, match|
+      command "hizuki" do |client, data, match|
+        hizuki = WorkHorse.new()
         case match[:expression]
-        when /\A([\+-]?\d+)[\s\t]*([mt]?)\Z/
-          type = if $2=="m" then "math" elsif $2=="t" then "trivia" else "" end
-          uri = "http://numbersapi.com/#{$1.to_i}/#{type}?json"
-          ni = WorkHorse.new(uri)
-          ni.fetch
-          client.say(channel: data.channel, text: ni.message)
-        when nil
-          uri = "http://numbersapi.com/random/trivia?json"
-          ni = WorkHorse.new(uri)
-          ni.fetch
-          client.say(channel: data.channel, text: ni.message)
+        when /\A(\d+)\/(\d+)\Z/
+          message = hizuki.date($1.to_i, $2.to_i)
+          client.say(channel: data.channel, text: message)
+        when /\A(\d+)\Z/
+          message = hizuki.year($1.to_i)
+          client.say(channel: data.channel, text: message)
         when "help"
           client.say(channel: data.channel, text: help_message("numi"))
         else
@@ -25,9 +21,9 @@ module Swimmy
 
       help do
         title "numi"
-        desc "  数が関係する雑学を教えてくれます．"
-        long_desc "numi - ランダムな数について，その数に関する雑学を教えてくれます．\n" +
-                  "numi NUM - 指定した数であるNUMに関係する雑学を教えてくれます．\n"  
+        desc "  西暦や日付に関係する雑学を教えてくれます．"
+        long_desc "numi MM/DD - MM月DD日に関係する雑学を教えてくれます．\n" +
+                  "numi YYYY - 西暦YYYYに関係する雑学を教えてくれます．\n"  
       end
 
       ####################################################################
@@ -38,8 +34,26 @@ module Swimmy
         require 'net/http'
 
 
-        def initialize(uri)
-          @uri = uri
+        def initialize()
+          @uri = "http://numbersapi.com/"
+        end
+
+        def date(month=0, day=0)
+          @uri << "#{month}/#{day}/date?json"
+          fetch
+          message
+        end
+
+        def year(year=nil)
+          @uri << "#{year}/year?json"
+          fetch
+          message
+        end
+
+        def date_check(month, day)
+        end
+
+        def year_check(year)
         end
 
         def fetch
@@ -57,9 +71,6 @@ module Swimmy
           return "error" if @result == nil
 
           text = <<~EOS 
-          [number]
-          #{@result["number"]}
-
           [trivia]
           #{@result["text"]}
           EOS
