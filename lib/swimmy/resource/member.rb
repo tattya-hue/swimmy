@@ -49,7 +49,7 @@ module Swimmy
           "Team: #{@team}\n" +
           "Mail: #{@mail}\n" +
           "Phone: #{@phone}\n" +
-          "Birthday: #{@birthday.strftime("%Y-%m-%d")}\n" +
+          "Birthday: #{@birthday&.strftime("%Y-%m-%d")}\n" +
           "Google: #{@google}\n" +
           "Twitter: #{@twitter}\n" +
           "GitHub: #{@github}\n" +
