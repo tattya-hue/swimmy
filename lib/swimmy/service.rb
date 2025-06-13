@@ -19,5 +19,7 @@ module Swimmy
     autoload :Nomnichi, "#{dir}/nomnichi.rb"
     autoload :RecipeInfomation, "#{dir}/recipe_information.rb"
     autoload :Bookmark, "#{dir}/bookmark.rb"
+    autoload :Translate, "#{dir}/translate.rb"
+    autoload :Numbersapi, "#{dir}/numbersapi.rb"
   end
 end
